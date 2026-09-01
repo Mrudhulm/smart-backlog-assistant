@@ -43,7 +43,7 @@ Example prompts:
 
 1. Navigate to the project root:
    ```bash
-   cd /Users/mrudhul/Documents/github/acn-ai/smart-backlog-assistant
+   cd ~/smart-backlog-assistant
    ```
 
 2. Create or update your environment file if needed:
