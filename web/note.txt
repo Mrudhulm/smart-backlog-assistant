@@ -1,0 +1,21 @@
+# Run these commands from the project root:
+# /Users/mrudhul/Documents/github/acn-ai/gemini-simple/smart-backlog-assistant
+
+# Build the web container.
+docker build --no-cache -t smart-backlog-web -f web/Dockerfile .
+
+# Start the container. Keep secrets in .env; do not put them in this file or Dockerfile.
+docker run --rm -it --env-file .env -p 5002:5000 \
+  -v "$(pwd)/inputs:/app/inputs" \
+  -v "$(pwd)/outputs:/app/outputs" \
+  smart-backlog-web
+
+# Open http://localhost:5002
+
+
+docker rm -f smart-backlog-web-smoke >/dev/null 2>&1 || true && docker run --rm -d --name smart-backlog-web-smoke --env-file .env -p 5002:5000 -v "$(pwd)/inputs:/app/inputs" -v "$(pwd)/outputs:/app/outputs" smart-backlog-web >/tmp/smart-backlog-web-smoke.id && curl --fail --silent --show-error --max-time 15 http://127.0.0.1:5002/login >/tmp/smart-backlog-web-smoke.html && printf '%s\n' 'DOCKER_LOGIN_OK' && docker rm -f smart-backlog-web-smoke >/dev/null && rm -f /tmp/smart-backlog-web-smoke.id /tmp/smart-backlog-web-smoke.html
+
+docker run --rm -it --env-file .env -p 5002:5000 \
+  -v "$(pwd)/inputs:/app/inputs" \
+  -v "$(pwd)/outputs:/app/outputs" \
+  smart-backlog-web

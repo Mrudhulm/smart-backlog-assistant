@@ -1,0 +1,9 @@
+Meeting Date: Aug 28, 2026
+Attendees: Sarah (Backend), Mike (Frontend), Alex (PM)
+Topic: User Authentication & Password Resets
+
+Notes:
+- We need to let users sign in with Google OAuth in addition to standard email/password.
+- Mike mentioned password resets are broken on mobile web views; we need a secure token-based reset link sent via email.
+- Sessions should expire after 7 days of inactivity, and we need a secure HttpOnly cookie setup for JWT storage.
+- Priority is high for Google Auth because enterprise clients are blocking our onboarding without it. Password reset is medium priority.

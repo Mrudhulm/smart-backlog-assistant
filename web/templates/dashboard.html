@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Backlog Intelligence Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h1 { color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 15px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .timestamp { font-size: 14px; color: #94a3b8; font-weight: normal; background: #0f172a; padding: 6px 12px; border-radius: 6px; border: 1px solid #334155; }
+        .card { background: #0f172a; border-left: 5px solid #38bdf8; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .form-card { background: #1e293b; border: 2px dashed #334155; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
+        .badge { display: inline-block; padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; }
+        .High { background: #ef4444; color: white; }
+        .Medium { background: #f59e0b; color: white; }
+        .Low { background: #10b981; color: white; }
+        input[type="text"], textarea, input[type="file"] { width: 100%; background: #0f172a; color: #f8fafc; border: 1px solid #334155; padding: 10px; border-radius: 6px; margin-top: 8px; box-sizing: border-box; }
+        button { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #7dd3fc; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 6px; color: #cbd5e1; }
+        .risk-box { background: #451a03; border-left: 5px solid #f59e0b; padding: 15px; margin-top: 20px; border-radius: 8px; }
+        .history-list { list-style: none; padding: 0; }
+        .history-list li { background: #0f172a; margin-bottom: 8px; padding: 10px 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .history-list a { color: #38bdf8; text-decoration: none; font-family: monospace; }
+        .history-list a:hover { text-decoration: underline; }
+        .logout-btn { background: #ef4444; color: white; padding: 6px 12px; font-size: 13px; text-decoration: none; border-radius: 6px; }
+        .logout-btn:hover { background: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>⚡ Smart Backlog Dashboard</span>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span class="timestamp">Current: {{ current_timestamp }}</span>
+                {% if data %}<span class="timestamp">Generated: {{ data.generated_at }}</span>{% endif %}
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout ({{ current_user.id }})</a>
+            </div>
+        </h1>
+
+        {% if error %}
+        <div class="risk-box" style="background: #3f1d1d; border-left-color: #f87171; margin-bottom: 20px;">
+            <h3 style="color: #fecaca; margin-top: 0;">⚠️ Request failed</h3>
+            <p style="margin-bottom: 0; color: #fee2e2;">{{ error }}</p>
+        </div>
+        {% endif %}
+
+        <div class="form-card">
+            <h3>Groom New Requirements</h3>
+            <form action="{{ url_for('process') }}" method="POST" enctype="multipart/form-data">
+                <label><strong>Username / Author Identifier:</strong></label>
+                <input type="text" name="username" value="{{ current_user.id }}" required><br><br>
+
+                <label><strong>Upload Requirement File (.txt, .md, .pdf):</strong></label>
+                <input type="file" name="file"><br><br>
+
+                <label><strong>Or Paste Raw Meeting Notes / Content:</strong></label>
+                <textarea name="raw_text" rows="4" placeholder="As a user, I want..."></textarea><br>
+                
+                <button type="submit">Analyze & Auto-Generate Backlog</button>
+            </form>
+        </div>
+
+        {% if data %}
+        <div class="card">
+            <h3>Project Executive Summary</h3>
+            <p>{{ data.project_summary }}</p>
+        </div>
+        
+        <h2>User Stories ({{ data.user_stories | length }})</h2>
+        {% for story in data.user_stories %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-family: monospace; color: #94a3b8;">{{ story.id }}</span>
+                <div>
+                    <span class="badge {{ story.priority }}">Priority: {{ story.priority }}</span>
+                    <span class="badge" style="background: #6366f1; color: white; margin-left: 5px;">Points: {{ story.estimate_points }}</span>
+                </div>
+            </div>
+            <h3 style="margin: 10px 0; color: #f1f5f9;">{{ story.title }}</h3>
+            <p><strong>Story:</strong> <em>{{ story.user_story }}</em></p>
+            <p><strong>Acceptance Criteria:</strong></p>
+            <ul>
+                {% for ac in story.acceptance_criteria %}
+                <li>{{ ac }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+
+        <div class="risk-box">
+            <h3>Identified Technical Risks</h3>
+            <ul>
+                {% for risk in data.identified_risks %}
+                <li>{{ risk }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 40px;">
+            <h3>📁 Generated Report Archive</h3>
+            {% if reports %}
+            <ul class="history-list">
+                {% for rep in reports %}
+                <li>
+                    <span>{{ rep }}</span>
+                    <div>
+                        <a href="{{ url_for('serve_output', filename=rep) }}" target="_blank">View HTML</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p style="color: #94a3b8;">No generated reports found yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
