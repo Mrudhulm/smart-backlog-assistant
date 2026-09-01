@@ -1,9 +1,0 @@
-Meeting Date: Aug 29, 2026
-Attendees: Sarahtr (Backend), Mrerretike (Frontend), Alwrtreex (PM)
-Topic: User Authentication & Password Resets
-
-Notes:
-- Wcheke the details
-- email commucaitn
-- Sessions externtion
-- Priority jtleel.

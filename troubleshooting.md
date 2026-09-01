@@ -10,8 +10,10 @@ Check:
 
 Try:
 ```bash
-cd /Users/mrudhul/Documents/github/acn-ai/gemini-simple/smart-backlog-assistant
+cd -/smart-backlog-assistant
+docker build --no-cache -t smart-backlog-web -f web/Dockerfile .
 docker build -t smart-backlog-gemini-assistant .
+
 ```
 
 ## 2. Input file not found
@@ -55,4 +57,11 @@ docker run --rm -it \
     --input inputs/meeting_notes_auth.txt \
     --output-json outputs/result.json \
     --output-html outputs/dashboard.html
+```
+
+```bash
+docker run --rm -it --env-file .env -p 5002:5000 \
+  -v "$(pwd)/inputs:/app/inputs" \
+  -v "$(pwd)/outputs:/app/outputs" \
+  smart-backlog-web
 ```
