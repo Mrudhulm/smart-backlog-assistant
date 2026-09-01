@@ -1,5 +1,5 @@
 # Run these commands from the project root:
-# /Users/mrudhul/Documents/github/acn-ai/gemini-simple/smart-backlog-assistant
+# ~/smart-backlog-assistant
 
 # Build the web container.
 docker build --no-cache -t smart-backlog-web -f web/Dockerfile .

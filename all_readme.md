@@ -68,7 +68,7 @@ smart-backlog-assistant/
 From the project folder:
 
 ```bash
-cd /Users/mrudhul/Documents/github/acn-ai/gemini-simple/smart-backlog-assistant
+cd ~/smart-backlog-assistant
 ```
 
 Build the Docker image:
