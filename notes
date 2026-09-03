@@ -1,0 +1,120 @@
+
+I’m turning this into a simple architecture explanation for the customer, focused only on what each folder and file does and where the team would typically update logic or settings.
+
+Simple customer-ready explanation
+Below is a clean version you can paste directly into your presentation.
+
+1. Project Overview
+This project is a Smart Backlog Assistant that converts raw meeting notes, PRDs, or text documents into structured Agile backlog items. It helps product teams quickly turn unorganized information into clear user stories, priorities, and acceptance criteria.
+
+The solution is built around a simple flow:
+
+input file is uploaded or selected
+text is read and processed
+AI analyzes the content
+backlog is generated
+JSON and HTML dashboard outputs are created
+2. Main Folder Structure
+smart-backlog-assistant – main project folder
+config – holds configuration settings and environment-related values
+inputs – place input files such as meeting notes, markdown, or PDF documents here
+outputs – stores generated backlog results and dashboard files
+src – contains the main business logic for AI processing and document handling
+tests – stores validation and testing scripts
+web – contains web UI or dashboard-related files
+3. What Each File Does
+Main application files
+main.py
+This is the entry point of the application. It starts the program, reads the input file, calls the AI logic, and saves the output JSON and HTML dashboard files. This is the main place to update the CLI workflow or output behavior.
+
+Dockerfile
+This file builds the application into a Docker container. It is used when the app needs to run consistently in a controlled environment.
+
+requirements.txt
+This file lists all Python dependencies required by the project, such as AI libraries, PDF reader libraries, and web app dependencies.
+
+README.md
+This is the user guide. It explains how to set up the project, how to run it, and what outputs it creates.
+
+.env.example
+This file shows the expected environment variables. It is used as a template for setting up secrets like the Gemini API key.
+
+4. Configuration Folder and Settings
+settings.py
+This file stores the application configuration. It contains:
+API key reference
+default AI model name
+environment-based settings
+This is the first place to change connection details such as:
+
+Gemini API key
+selected AI model
+environment settings
+In simple terms, this file controls how the app connects to the AI service.
+
+5. Source Folder and Core Logic
+src
+This is the brain of the application. It contains the logic that:
+reads files
+sends content to the AI engine
+validates output
+creates the final backlog data
+This folder is where the main business logic is maintained.
+
+File-by-file details
+ai_client.py
+This file connects to the Gemini AI service. It creates the prompt, sends the meeting notes to the model, and receives the generated backlog response.
+This is the place to change:
+
+prompt design
+model selection
+AI request configuration
+response behavior
+parser.py
+This file handles document processing. It reads text files, PDF files, and saves results to JSON and HTML.
+This is the place to change:
+
+supported file types
+parsing logic
+output generation
+dashboard formatting
+validator.py
+This file validates the output structure returned by AI. It checks whether the generated backlog follows the expected schema and required format.
+This is the place to change:
+
+validation rules
+required backlog fields
+output quality checks
+6. Web Folder
+app.py
+This file creates the web interface. It allows users to upload files, process them through the AI flow, and view the generated dashboard.
+This is the place to change:
+login settings
+web form behavior
+dashboard display
+user interaction logic
+7. Where to Change Connection and Configuration
+The main change points are:
+
+API and model settings: settings.py
+AI request and response handling: ai_client.py
+Input reading and output generation: parser.py
+Output validation: validator.py
+Program startup and workflow trigger: main.py
+UI or browser flow: app.py
+8. Change Management Summary
+For future updates, the team should follow this structure:
+
+Configuration changes → settings.py
+AI behavior changes → ai_client.py
+Input/output changes → parser.py
+Validation changes → validator.py
+CLI or execution changes → main.py
+UI or web changes → web/app.py
+Environment and deployment changes → Dockerfile and .env.example
+This keeps the project organized and easy to maintain.
+
+9. Final Simple Statement
+This project is designed to take messy meeting notes and convert them into clear backlog items using AI. The configuration handles the connection to the AI service, the source logic handles processing and generation, and the output files provide the final business-ready backlog and dashboard.
+
+If you want, I can also turn this into a 5-slide PowerPoint version with very short text and big headings for demo use.
